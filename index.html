@@ -186,7 +186,15 @@
   </div>
 
   <script>
-    const scores = { a: 0, b: 0 };
+    const saved = JSON.parse(localStorage.getItem('vb-scores') || 'null');
+    const scores = saved || { a: 0, b: 0 };
+
+    document.getElementById('score-a').textContent = scores.a;
+    document.getElementById('score-b').textContent = scores.b;
+
+    function save() {
+      localStorage.setItem('vb-scores', JSON.stringify(scores));
+    }
 
     function handleTap(e, team) {
       const box = e.currentTarget;
@@ -200,6 +208,7 @@
     function adjust(team, delta) {
       scores[team] = Math.max(0, scores[team] + delta);
       document.getElementById('score-' + team).textContent = scores[team];
+      save();
     }
 
     function reset() {
@@ -207,6 +216,7 @@
       scores.b = 0;
       document.getElementById('score-a').textContent = '0';
       document.getElementById('score-b').textContent = '0';
+      save();
     }
 
     // Keep screen awake while the scoreboard is open
