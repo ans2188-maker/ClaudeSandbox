@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Volleyball Scoreboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/nosleep.js@0.12.0/dist/NoSleep.min.js"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -197,6 +198,7 @@
     }
 
     function handleTap(e, team) {
+      enableNoSleep();
       const box = e.currentTarget;
       const isRight = e.offsetX >= box.offsetWidth / 2;
       adjust(team, isRight ? 1 : -1);
@@ -219,22 +221,18 @@
       save();
     }
 
-    // Keep screen awake while the scoreboard is open
-    let wakeLock = null;
+    // Keep screen awake — uses Wake Lock API where available, falls back
+    // to a hidden looping video for browsers that don't support it (e.g. DuckDuckGo on iOS)
+    let noSleep;
+    try { noSleep = new NoSleep(); } catch (_) {}
 
-    async function requestWakeLock() {
-      if (!('wakeLock' in navigator)) return;
-      try {
-        wakeLock = await navigator.wakeLock.request('screen');
-      } catch (_) {}
+    function enableNoSleep() {
+      if (noSleep) noSleep.enable().catch(() => {});
     }
 
-    // Re-acquire after the page becomes visible again (e.g. tab switch)
     document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible') requestWakeLock();
+      if (document.visibilityState === 'visible') enableNoSleep();
     });
-
-    requestWakeLock();
   </script>
 </body>
 </html>
