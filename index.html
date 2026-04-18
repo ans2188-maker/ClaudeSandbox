@@ -12,7 +12,7 @@
     }
 
     body {
-      min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -20,20 +20,24 @@
       background: #1a1a2e;
       font-family: 'Segoe UI', sans-serif;
       color: #fff;
+      padding: 1rem;
     }
 
     h1 {
-      font-size: 1.5rem;
+      font-size: clamp(0.9rem, 3.5vw, 1.5rem);
       letter-spacing: 0.2em;
       text-transform: uppercase;
       color: #a0aec0;
-      margin-bottom: 2rem;
+      margin-bottom: clamp(1rem, 3vh, 2rem);
+      text-align: center;
     }
 
     .scoreboard {
       display: flex;
       align-items: stretch;
-      gap: 2rem;
+      gap: clamp(0.75rem, 3vw, 2rem);
+      width: 100%;
+      max-width: 600px;
     }
 
     .team {
@@ -42,17 +46,18 @@
       align-items: center;
       background: #16213e;
       border-radius: 1rem;
-      padding: 2rem 2.5rem;
-      min-width: 220px;
+      padding: clamp(1rem, 3vw, 2rem) clamp(0.75rem, 3vw, 2.5rem);
+      flex: 1;
+      min-width: 0;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
 
     .team-name {
-      font-size: 1.1rem;
+      font-size: clamp(0.8rem, 3vw, 1.1rem);
       letter-spacing: 0.1em;
       text-transform: uppercase;
       color: #90cdf4;
-      margin-bottom: 1.5rem;
+      margin-bottom: clamp(0.75rem, 2vh, 1.5rem);
       font-weight: 600;
     }
 
@@ -61,11 +66,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 6rem;
+      font-size: clamp(3.5rem, 13vw, 6rem);
       font-weight: 700;
       line-height: 1;
-      min-width: 180px;
-      height: 140px;
+      width: 100%;
+      height: clamp(90px, 22vw, 140px);
       border-radius: 0.75rem;
       cursor: pointer;
       user-select: none;
@@ -105,7 +110,7 @@
     }
 
     .score-hint {
-      font-size: 0.7rem;
+      font-size: clamp(0.55rem, 2vw, 0.7rem);
       letter-spacing: 0.08em;
       color: #4a5568;
       display: flex;
@@ -137,13 +142,13 @@
     }
 
     .reset-wrap {
-      margin-top: 2.5rem;
+      margin-top: clamp(1.25rem, 3vh, 2.5rem);
     }
 
     .btn-reset {
       background: #742a2a;
       color: #fed7d7;
-      font-size: 0.9rem;
+      font-size: clamp(0.75rem, 2.5vw, 0.9rem);
       letter-spacing: 0.1em;
       text-transform: uppercase;
       width: auto;
