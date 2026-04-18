@@ -203,6 +203,23 @@
       document.getElementById('score-a').textContent = '0';
       document.getElementById('score-b').textContent = '0';
     }
+
+    // Keep screen awake while the scoreboard is open
+    let wakeLock = null;
+
+    async function requestWakeLock() {
+      if (!('wakeLock' in navigator)) return;
+      try {
+        wakeLock = await navigator.wakeLock.request('screen');
+      } catch (_) {}
+    }
+
+    // Re-acquire after the page becomes visible again (e.g. tab switch)
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') requestWakeLock();
+    });
+
+    requestWakeLock();
   </script>
 </body>
 </html>
