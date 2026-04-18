@@ -56,56 +56,75 @@
       font-weight: 600;
     }
 
-    .score {
+    .score-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 6rem;
       font-weight: 700;
       line-height: 1;
-      margin-bottom: 1.5rem;
-      min-width: 3ch;
-      text-align: center;
+      min-width: 180px;
+      height: 140px;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      user-select: none;
       color: #f7fafc;
+      overflow: hidden;
+      margin-bottom: 0.75rem;
     }
 
-    .controls {
+    .score-box::before,
+    .score-box::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      width: 50%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    .score-box::before {
+      left: 0;
+      background: radial-gradient(circle at 30% 50%, rgba(160,100,100,0.35), transparent 70%);
+    }
+
+    .score-box::after {
+      right: 0;
+      background: radial-gradient(circle at 70% 50%, rgba(100,160,100,0.35), transparent 70%);
+    }
+
+    .score-box:active::before,
+    .score-box.flash-minus::before {
+      opacity: 1;
+    }
+
+    .score-box.flash-plus::after {
+      opacity: 1;
+    }
+
+    .score-hint {
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      color: #4a5568;
       display: flex;
-      gap: 1rem;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0 0.25rem;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
     }
 
     button {
       border: none;
       border-radius: 0.5rem;
       cursor: pointer;
-      font-size: 1.5rem;
-      font-weight: 700;
-      width: 3rem;
-      height: 3rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       transition: background 0.15s, transform 0.1s;
     }
 
     button:active {
       transform: scale(0.93);
-    }
-
-    .btn-plus {
-      background: #2b6cb0;
-      color: #fff;
-    }
-
-    .btn-plus:hover {
-      background: #3182ce;
-    }
-
-    .btn-minus {
-      background: #2d3748;
-      color: #a0aec0;
-    }
-
-    .btn-minus:hover {
-      background: #4a5568;
-      color: #e2e8f0;
     }
 
     .divider {
@@ -144,22 +163,16 @@
   <div class="scoreboard">
     <div class="team">
       <div class="team-name">Team A</div>
-      <div class="score" id="score-a">0</div>
-      <div class="controls">
-        <button class="btn-minus" onclick="adjust('a', -1)">−</button>
-        <button class="btn-plus" onclick="adjust('a', +1)">+</button>
-      </div>
+      <div class="score-box" id="score-a" onclick="handleTap(event, 'a')">0</div>
+      <div class="score-hint"><span>− tap left</span><span>tap right +</span></div>
     </div>
 
     <div class="divider">:</div>
 
     <div class="team">
       <div class="team-name">Team B</div>
-      <div class="score" id="score-b">0</div>
-      <div class="controls">
-        <button class="btn-minus" onclick="adjust('b', -1)">−</button>
-        <button class="btn-plus" onclick="adjust('b', +1)">+</button>
-      </div>
+      <div class="score-box" id="score-b" onclick="handleTap(event, 'b')">0</div>
+      <div class="score-hint"><span>− tap left</span><span>tap right +</span></div>
     </div>
   </div>
 
@@ -169,6 +182,15 @@
 
   <script>
     const scores = { a: 0, b: 0 };
+
+    function handleTap(e, team) {
+      const box = e.currentTarget;
+      const isRight = e.offsetX >= box.offsetWidth / 2;
+      adjust(team, isRight ? 1 : -1);
+      const cls = isRight ? 'flash-plus' : 'flash-minus';
+      box.classList.add(cls);
+      setTimeout(() => box.classList.remove(cls), 200);
+    }
 
     function adjust(team, delta) {
       scores[team] = Math.max(0, scores[team] + delta);
