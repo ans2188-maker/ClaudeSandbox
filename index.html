@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="theme-color" content="#ff3333" />
+  <meta name="theme-color" content="#8f2418" />
   <title>Volleyball Scoreboard</title>
   <script src="https://cdn.jsdelivr.net/npm/nosleep.js@0.12.0/dist/NoSleep.min.js"></script>
   <style>
@@ -18,8 +18,8 @@
     }
 
     :root {
-      --bg: #ff3333;
-      --ink: #000a3d;
+      --bg: #8f2418;
+      --ink: #ffffff;
     }
 
     body {
@@ -105,7 +105,7 @@
 
     .score-box::before {
       left: 0;
-      background: radial-gradient(circle at 30% 50%, rgba(0,10,61,0.3), transparent 70%);
+      background: radial-gradient(circle at 30% 50%, rgba(0,0,0,0.35), transparent 70%);
     }
 
     .score-box::after {
@@ -161,7 +161,7 @@
 
     .btn-reset {
       background: var(--ink);
-      color: #fff;
+      color: var(--bg);
       font-weight: 700;
       font-size: clamp(0.85rem, 2.5vw, 1.1rem);
       letter-spacing: 0.1em;
@@ -173,7 +173,7 @@
     }
 
     .btn-reset:hover {
-      background: #001a6e;
+      background: #f3d6d2;
     }
 
     .fs-tip {
@@ -183,7 +183,7 @@
       transform: translateX(-50%);
       max-width: 90vw;
       background: var(--ink);
-      color: #fff;
+      color: var(--bg);
       font-weight: 600;
       padding: 0.75rem 1rem;
       border-radius: 0.5rem;
