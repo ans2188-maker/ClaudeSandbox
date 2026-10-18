@@ -2,7 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <!-- Lets "Add to Home Screen" open the page without browser chrome (iPhone has no fullscreen API) -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#ff3333" />
   <title>Volleyball Scoreboard</title>
   <script src="https://cdn.jsdelivr.net/npm/nosleep.js@0.12.0/dist/NoSleep.min.js"></script>
   <style>
@@ -12,54 +17,60 @@
       padding: 0;
     }
 
+    :root {
+      --bg: #ff3333;
+      --ink: #000a3d;
+    }
+
     body {
-      min-height: 100dvh;
+      height: 100dvh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: #1a1a2e;
+      background: var(--bg);
       font-family: 'Segoe UI', sans-serif;
-      color: #fff;
-      padding: 1rem;
+      color: var(--ink);
+      padding: max(0.75rem, env(safe-area-inset-top)) max(0.75rem, env(safe-area-inset-right))
+               max(0.75rem, env(safe-area-inset-bottom)) max(0.75rem, env(safe-area-inset-left));
+      overflow: hidden;
     }
 
     h1 {
       font-size: clamp(0.9rem, 3.5vw, 1.5rem);
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: #a0aec0;
-      margin-bottom: clamp(1rem, 3vh, 2rem);
+      font-weight: 700;
+      margin-bottom: clamp(0.5rem, 2vh, 1.5rem);
       text-align: center;
     }
 
     .scoreboard {
       display: flex;
       align-items: stretch;
-      gap: clamp(0.75rem, 3vw, 2rem);
+      gap: clamp(0.5rem, 2vw, 1.5rem);
       width: 100%;
-      max-width: 600px;
+      flex: 1;
+      min-height: 0;
     }
 
     .team {
       display: flex;
       flex-direction: column;
       align-items: center;
-      background: #16213e;
+      border: clamp(3px, 0.6vw, 6px) solid var(--ink);
       border-radius: 1rem;
-      padding: clamp(1rem, 3vw, 2rem) clamp(0.75rem, 3vw, 2.5rem);
+      padding: clamp(0.5rem, 2vw, 1.25rem);
       flex: 1;
       min-width: 0;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
 
     .team-name {
-      font-size: clamp(0.8rem, 3vw, 1.1rem);
+      font-size: clamp(1rem, 4vw, 2rem);
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: #90cdf4;
-      margin-bottom: clamp(0.75rem, 2vh, 1.5rem);
-      font-weight: 600;
+      margin-bottom: clamp(0.25rem, 1vh, 0.75rem);
+      font-weight: 800;
     }
 
     .score-box {
@@ -67,17 +78,18 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: clamp(3.5rem, 13vw, 6rem);
-      font-weight: 700;
+      font-size: clamp(4rem, min(28vw, 55vh), 30rem);
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
       line-height: 1;
       width: 100%;
-      height: clamp(90px, 22vw, 140px);
+      flex: 1;
+      min-height: 0;
       border-radius: 0.75rem;
       cursor: pointer;
       user-select: none;
-      color: #f7fafc;
       overflow: hidden;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.5rem;
     }
 
     .score-box::before,
@@ -93,12 +105,12 @@
 
     .score-box::before {
       left: 0;
-      background: radial-gradient(circle at 30% 50%, rgba(160,100,100,0.35), transparent 70%);
+      background: radial-gradient(circle at 30% 50%, rgba(0,10,61,0.3), transparent 70%);
     }
 
     .score-box::after {
       right: 0;
-      background: radial-gradient(circle at 70% 50%, rgba(100,160,100,0.35), transparent 70%);
+      background: radial-gradient(circle at 70% 50%, rgba(255,255,255,0.45), transparent 70%);
     }
 
     .score-box:active::before,
@@ -111,14 +123,14 @@
     }
 
     .score-hint {
-      font-size: clamp(0.55rem, 2vw, 0.7rem);
+      font-size: clamp(0.6rem, 2vw, 1rem);
+      white-space: nowrap;
       letter-spacing: 0.08em;
-      color: #4a5568;
+      font-weight: 700;
       display: flex;
       justify-content: space-between;
       width: 100%;
       padding: 0 0.25rem;
-      margin-bottom: 1rem;
       text-transform: uppercase;
     }
 
@@ -136,30 +148,47 @@
     .divider {
       display: flex;
       align-items: center;
-      font-size: 2.5rem;
-      font-weight: 300;
-      color: #4a5568;
+      font-size: clamp(2.5rem, 8vw, 6rem);
+      font-weight: 800;
       padding: 0 0.5rem;
     }
 
     .reset-wrap {
-      margin-top: clamp(1.25rem, 3vh, 2.5rem);
+      display: flex;
+      gap: 1rem;
+      margin-top: clamp(0.5rem, 2vh, 1.5rem);
     }
 
     .btn-reset {
-      background: #742a2a;
-      color: #fed7d7;
-      font-size: clamp(0.75rem, 2.5vw, 0.9rem);
+      background: var(--ink);
+      color: #fff;
+      font-weight: 700;
+      font-size: clamp(0.85rem, 2.5vw, 1.1rem);
       letter-spacing: 0.1em;
       text-transform: uppercase;
       width: auto;
       padding: 0 1.5rem;
-      height: 2.5rem;
+      height: 2.75rem;
       border-radius: 0.5rem;
     }
 
     .btn-reset:hover {
-      background: #9b2c2c;
+      background: #001a6e;
+    }
+
+    .fs-tip {
+      position: fixed;
+      left: 50%;
+      bottom: 4.5rem;
+      transform: translateX(-50%);
+      max-width: 90vw;
+      background: var(--ink);
+      color: #fff;
+      font-weight: 600;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      text-align: center;
+      display: none;
     }
   </style>
 </head>
@@ -170,7 +199,7 @@
     <div class="team">
       <div class="team-name">Team A</div>
       <div class="score-box" id="score-a" onclick="handleTap(event, 'a')">0</div>
-      <div class="score-hint"><span>− tap left</span><span>tap right +</span></div>
+      <div class="score-hint"><span>− left</span><span>right +</span></div>
     </div>
 
     <div class="divider">:</div>
@@ -178,13 +207,16 @@
     <div class="team">
       <div class="team-name">Team B</div>
       <div class="score-box" id="score-b" onclick="handleTap(event, 'b')">0</div>
-      <div class="score-hint"><span>− tap left</span><span>tap right +</span></div>
+      <div class="score-hint"><span>− left</span><span>right +</span></div>
     </div>
   </div>
 
   <div class="reset-wrap">
     <button class="btn-reset" onclick="reset()">Reset</button>
+    <button class="btn-reset" id="btn-fs" onclick="toggleFullscreen()">Full Screen</button>
   </div>
+
+  <div class="fs-tip" id="fs-tip">This browser can't go full screen. Use Share → Add to Home Screen, then open it from there.</div>
 
   <script>
     const saved = JSON.parse(localStorage.getItem('vb-scores') || 'null');
@@ -220,6 +252,39 @@
       document.getElementById('score-b').textContent = '0';
       save();
     }
+
+    const root = document.documentElement;
+    const fsBtn = document.getElementById('btn-fs');
+    const fsElement = () => document.fullscreenElement || document.webkitFullscreenElement;
+    const isStandalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+
+    // Already launched from the home screen: there's no browser UI to hide
+    if (isStandalone) fsBtn.style.display = 'none';
+
+    function toggleFullscreen() {
+      enableNoSleep();
+      if (fsElement()) {
+        (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+      } else if (root.requestFullscreen) {
+        root.requestFullscreen().catch(showFsTip);
+      } else if (root.webkitRequestFullscreen) {
+        root.webkitRequestFullscreen();
+      } else {
+        showFsTip();
+      }
+    }
+
+    function showFsTip() {
+      const tip = document.getElementById('fs-tip');
+      tip.style.display = 'block';
+      setTimeout(() => tip.style.display = 'none', 5000);
+    }
+
+    function updateFsButton() {
+      fsBtn.textContent = fsElement() ? 'Exit Full Screen' : 'Full Screen';
+    }
+    document.addEventListener('fullscreenchange', updateFsButton);
+    document.addEventListener('webkitfullscreenchange', updateFsButton);
 
     // Keep screen awake — uses Wake Lock API where available, falls back
     // to a hidden looping video for browsers that don't support it (e.g. DuckDuckGo on iOS)
