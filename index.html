@@ -36,19 +36,9 @@
       overflow: hidden;
     }
 
-    h1 {
-      font-size: clamp(0.9rem, 3.5vw, 1.5rem);
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      font-weight: 700;
-      margin-bottom: clamp(0.5rem, 2vh, 1.5rem);
-      text-align: center;
-    }
-
     .scoreboard {
       display: flex;
       align-items: stretch;
-      gap: clamp(0.5rem, 2vw, 1.5rem);
       width: 100%;
       flex: 1;
       min-height: 0;
@@ -58,19 +48,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      border: clamp(3px, 0.6vw, 6px) solid var(--ink);
-      border-radius: 1rem;
-      padding: clamp(0.35rem, 1.2vw, 0.75rem);
       flex: 1;
       min-width: 0;
-    }
-
-    .team-name {
-      font-size: clamp(0.7rem, 2vw, 1rem);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 0;
-      font-weight: 800;
     }
 
     .score-box {
@@ -128,16 +107,13 @@
       opacity: 1;
     }
 
-    .score-hint {
-      font-size: clamp(0.55rem, 1.5vw, 0.75rem);
+    .tap-hint {
+      font-size: 0.75rem;
       white-space: nowrap;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
       font-weight: 700;
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-      padding: 0 0.25rem;
       text-transform: uppercase;
+      opacity: 0.75;
     }
 
     button {
@@ -159,15 +135,18 @@
       padding: 0 0.5rem;
     }
 
-    /* Short landscape screens: give the title's space to the scores */
-    @media (max-height: 420px) {
-      h1 { display: none; }
+    /* Upright phone: stack the scores so each gets the full width */
+    @media (orientation: portrait) {
+      .scoreboard { flex-direction: column; }
+      .divider { display: none; }
     }
 
     .reset-wrap {
       display: flex;
-      gap: 1.5rem;
+      align-items: center;
+      gap: clamp(0.75rem, 4vw, 1.5rem);
       margin-top: 0.25rem;
+      white-space: nowrap;
     }
 
     .btn-reset {
@@ -202,25 +181,20 @@
   </style>
 </head>
 <body>
-  <h1>Volleyball Scoreboard</h1>
-
   <div class="scoreboard">
     <div class="team">
-      <div class="team-name">Team A</div>
       <div class="score-box" onclick="handleTap(event, 'a')"><span class="score-num" id="score-a">0</span></div>
-      <div class="score-hint"><span>− left</span><span>right +</span></div>
     </div>
 
     <div class="divider">:</div>
 
     <div class="team">
-      <div class="team-name">Team B</div>
       <div class="score-box" onclick="handleTap(event, 'b')"><span class="score-num" id="score-b">0</span></div>
-      <div class="score-hint"><span>− left</span><span>right +</span></div>
     </div>
   </div>
 
   <div class="reset-wrap">
+    <span class="tap-hint">Tap left −  ·  right +</span>
     <button class="btn-reset" onclick="reset()">Reset</button>
     <button class="btn-reset" id="btn-fs" onclick="toggleFullscreen()">Full Screen</button>
   </div>
