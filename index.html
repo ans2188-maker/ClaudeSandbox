@@ -78,7 +78,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: clamp(4rem, min(28vw, 55vh), 30rem);
+      /* Digits are sized from this box (see .score-num), so they always fit inside it */
+      container-type: size;
       font-weight: 800;
       font-variant-numeric: tabular-nums;
       line-height: 1;
@@ -90,6 +91,12 @@
       user-select: none;
       overflow: hidden;
       margin-bottom: 0.5rem;
+    }
+
+    .score-num {
+      font-size: clamp(4rem, min(28vw, 40vh), 30rem);
+      font-size: min(105cqh, 80cqw);
+      pointer-events: none;
     }
 
     .score-box::before,
@@ -153,27 +160,30 @@
       padding: 0 0.5rem;
     }
 
+    /* Short landscape screens: give the title's space to the scores */
+    @media (max-height: 420px) {
+      h1 { display: none; }
+    }
+
     .reset-wrap {
       display: flex;
-      gap: 1rem;
-      margin-top: clamp(0.5rem, 2vh, 1.5rem);
+      gap: 1.5rem;
+      margin-top: 0.25rem;
     }
 
     .btn-reset {
-      background: var(--ink);
-      color: var(--bg);
+      background: none;
+      color: var(--ink);
       font-weight: 700;
-      font-size: clamp(0.85rem, 2.5vw, 1.1rem);
+      font-size: 0.75rem;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      width: auto;
-      padding: 0 1.5rem;
-      height: 2.75rem;
-      border-radius: 0.5rem;
+      padding: 0.25rem 0.5rem;
+      opacity: 0.75;
     }
 
     .btn-reset:hover {
-      background: #f3d6d2;
+      opacity: 1;
     }
 
     .fs-tip {
@@ -198,7 +208,7 @@
   <div class="scoreboard">
     <div class="team">
       <div class="team-name">Team A</div>
-      <div class="score-box" id="score-a" onclick="handleTap(event, 'a')">0</div>
+      <div class="score-box" onclick="handleTap(event, 'a')"><span class="score-num" id="score-a">0</span></div>
       <div class="score-hint"><span>− left</span><span>right +</span></div>
     </div>
 
@@ -206,7 +216,7 @@
 
     <div class="team">
       <div class="team-name">Team B</div>
-      <div class="score-box" id="score-b" onclick="handleTap(event, 'b')">0</div>
+      <div class="score-box" onclick="handleTap(event, 'b')"><span class="score-num" id="score-b">0</span></div>
       <div class="score-hint"><span>− left</span><span>right +</span></div>
     </div>
   </div>
