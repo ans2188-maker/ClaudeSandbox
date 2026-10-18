@@ -163,21 +163,6 @@
     .btn-reset:hover {
       opacity: 1;
     }
-
-    .fs-tip {
-      position: fixed;
-      left: 50%;
-      bottom: 4.5rem;
-      transform: translateX(-50%);
-      max-width: 90vw;
-      background: var(--ink);
-      color: var(--bg);
-      font-weight: 600;
-      padding: 0.75rem 1rem;
-      border-radius: 0.5rem;
-      text-align: center;
-      display: none;
-    }
   </style>
 </head>
 <body>
@@ -196,10 +181,7 @@
   <div class="reset-wrap">
     <span class="tap-hint">Tap left −  ·  right +</span>
     <button class="btn-reset" onclick="reset()">Reset</button>
-    <button class="btn-reset" id="btn-fs" onclick="toggleFullscreen()">Full Screen</button>
   </div>
-
-  <div class="fs-tip" id="fs-tip">This browser can't go full screen. Use Share → Add to Home Screen, then open it from there.</div>
 
   <script>
     const saved = JSON.parse(localStorage.getItem('vb-scores') || 'null');
@@ -235,39 +217,6 @@
       document.getElementById('score-b').textContent = '0';
       save();
     }
-
-    const root = document.documentElement;
-    const fsBtn = document.getElementById('btn-fs');
-    const fsElement = () => document.fullscreenElement || document.webkitFullscreenElement;
-    const isStandalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
-
-    // Already launched from the home screen: there's no browser UI to hide
-    if (isStandalone) fsBtn.style.display = 'none';
-
-    function toggleFullscreen() {
-      enableNoSleep();
-      if (fsElement()) {
-        (document.exitFullscreen || document.webkitExitFullscreen).call(document);
-      } else if (root.requestFullscreen) {
-        root.requestFullscreen().catch(showFsTip);
-      } else if (root.webkitRequestFullscreen) {
-        root.webkitRequestFullscreen();
-      } else {
-        showFsTip();
-      }
-    }
-
-    function showFsTip() {
-      const tip = document.getElementById('fs-tip');
-      tip.style.display = 'block';
-      setTimeout(() => tip.style.display = 'none', 5000);
-    }
-
-    function updateFsButton() {
-      fsBtn.textContent = fsElement() ? 'Exit Full Screen' : 'Full Screen';
-    }
-    document.addEventListener('fullscreenchange', updateFsButton);
-    document.addEventListener('webkitfullscreenchange', updateFsButton);
 
     // Keep screen awake — uses Wake Lock API where available, falls back
     // to a hidden looping video for browsers that don't support it (e.g. DuckDuckGo on iOS)
